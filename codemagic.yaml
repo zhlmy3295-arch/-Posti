@@ -6,8 +6,10 @@ workflows:
     environment:
       node: 18.17.0
     scripts:
-      - name: Install NPM Packages
-        script: npm install
+      - name: Clean Install
+        script: |
+          rm -rf node_modules package-lock.json
+          npm install
       - name: Build Web App
         script: npm run build
       - name: Sync Capacitor Android

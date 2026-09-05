@@ -1,14 +1,20 @@
 workflows:
-  android-workflow:
-    name: Android Release
+  android-release:
+    name: Android Release APK
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
-      flutter: stable
+      node: 18.17.0
     scripts:
-      - name: Get Flutter Packages
-        script: flutter pub get
+      - name: Install NPM Packages
+        script: npm install
+      - name: Build Web App
+        script: npm run build
+      - name: Sync Capacitor Android
+        script: npx cap sync android
       - name: Build Android APK
-        script: flutter build apk --release
+        script: |
+          cd android
+          ./gradlew assembleRelease
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - android/app/build/outputs/apk/release/*.apk

@@ -14,15 +14,12 @@ workflows:
         script: npm run build
       - name: Sync Capacitor Android
         script: npx cap sync android
-      - name: Fix Gradle Wrapper
+      - name: Build Android APK with Gradle
         script: |
           cd android
-          rm -rf .gradle gradle/wrapper/gradle-wrapper.jar
-          ./gradlew wrapper
-          chmod +x ./gradlew
-      - name: Build Android APK
-        script: |
-          cd android
-          ./gradlew assembleRelease
+          # نمسح البايظ خالص
+          rm -rf .gradle gradle
+          # نستخدم gradle اللي موجود في الماكينة نفسها
+          gradle assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk

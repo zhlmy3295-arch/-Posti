@@ -5,6 +5,7 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       node: 22.14.0
+      java: 17
     scripts:
       - name: Clean Install
         script: |
@@ -17,9 +18,6 @@ workflows:
       - name: Build Android APK with Gradle
         script: |
           cd android
-          # نمسح البايظ خالص
-          rm -rf .gradle gradle
-          # نستخدم gradle اللي موجود في الماكينة نفسها
           gradle assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk

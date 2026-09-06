@@ -5,7 +5,8 @@ ext {
     androidxAppCompatVersion = '1.6.1'
     androidxActivityVersion = '1.8.2'
     androidxFragmentVersion = '1.6.2'
-    androidxCoordinatorLayoutVersion = '1.2.0'  // <-- ضيف ده
+    androidxCoordinatorLayoutVersion = '1.2.0'
+    androidxCoreSplashScreenVersion = '1.1.0'  // <-- ضيف ده
     coreXVersion = '1.12.0'
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.1.5'

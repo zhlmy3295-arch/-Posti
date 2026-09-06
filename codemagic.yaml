@@ -11,6 +11,7 @@ workflows:
         script: |
           rm -rf node_modules package-lock.json
           npm install --legacy-peer-deps
+          npm install @capacitor/android@5.5.1 @capacitor/core@5.5.1 --save-exact
       - name: Build Web App
         script: npm run build
       - name: Sync Capacitor Android

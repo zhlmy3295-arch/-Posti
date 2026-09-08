@@ -32,28 +32,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
-    
+    implementation "com.google.android.material:material:1.11.0" // <-- ضيفناه عشان Material3
+    implementation "androidx.core:core-splashscreen:1.0.1" // <-- ضيفناه عشان SplashScreen
+
     implementation project(':capacitor-android')
-    testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
-    implementation project(':capacitor-cordova-android-plugins')
-}
-
-// ده اللي هيشيل splashscreen من Cordova
-configurations {
-    all {
-        exclude group: 'androidx.core', module: 'core-splashscreen'
-    }
-}
-
-apply from: 'capacitor.build.gradle'
-
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
-}
+   

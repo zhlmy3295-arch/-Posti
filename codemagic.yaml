@@ -22,6 +22,10 @@ workflows:
         script: |
           cd android
           rm -rf gradle
+      - name: Give Permission to Gradle
+        script: |
+          cd android
+          chmod +x ./gradlew
       - name: Build and Sign APK
         script: |
           cd android

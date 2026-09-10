@@ -18,11 +18,13 @@ workflows:
         script: npm run build
       - name: Sync Capacitor Android
         script: npx cap sync android
+      - name: Delete Corrupt Gradle Wrapper
+        script: |
+          cd android
+          rm -rf gradle
       - name: Build Android APK with Gradle
         script: |
           cd android
           gradle assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
-    android_signing:
-      - name: posti-key

@@ -1,17 +1,13 @@
 workflows:
-  android-release:
-    name: Android Release APK
-    max_build_duration: 120
-    instance_type: mac_mini_m2
-    environment:
-      node: 22.14.0
-      java: 17
+  posti-android:
+    name: Posti Android
+    instance_type: mac_mini_m1
     scripts:
       - name: Clean Install
         script: |
           rm -rf node_modules package-lock.json
           npm install --legacy-peer-deps
-          npm install @capacitor/android@5.5.1 @capacitor/core@5.5.1 --save-exact
+          npm install @capacitor/android@latest
       - name: Build Web App
         script: npm run build
       - name: Sync Capacitor Android
@@ -19,6 +15,6 @@ workflows:
       - name: Build Android APK with Gradle
         script: |
           cd android
-          gradle assembleRelease
+          ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk

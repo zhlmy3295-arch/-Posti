@@ -1,36 +1,16 @@
 workflows:
   posti-android:
     name: Posti Android Build
-    max_build_duration: 60
     instance_type: mac_mini_m1
-    environment:
-      groups:
-        - posti_keystore_credentials
     scripts:
-      - name: Clean Install
+      - name: Install
         script: |
-          rm -rf node_modules package-lock.json
           npm install --legacy-peer-deps
-          npm install @capacitor/android@6.2.2 @capacitor/core@6.2.2
-      - name: Build Web App
-        script: npm run build
-      - name: Sync Capacitor Android
-        script: npx cap sync android
-      - name: Fix Gradle Wrapper
+          npx cap sync android
+      - name: Build APK
         script: |
           cd android
-          ./gradlew --version || gradle wrapper
           chmod +x ./gradlew
-      - name: Decode Keystore
-        script: |
-          echo $CM_KEYSTORE | base64 --decode > $HOME/posti_key.p12
-      - name: Build and Sign APK
-        script: |
-          cd android
-          ./gradlew assembleRelease \
-          -Pandroid.injected.signing.store.file=$HOME/posti_key.p12 \
-          -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD \
-          -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS \
-          -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
+          ./gradlew assembleRelease
     artifacts:
-      - android/app/build/outputs/apk/release/app-release.apk
+      - android/app/build/outputs/apk/release/*.apk

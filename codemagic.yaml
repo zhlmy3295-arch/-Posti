@@ -3,12 +3,14 @@ workflows:
     name: Posti Android
     instance_type: mac_mini_m1
     max_build_duration: 60
+    
     environment:
       vars:
         ANDROID_KEYSTORE_PATH: $CM_KEYSTORE_PATH
         ANDROID_KEYSTORE_PASSWORD: $CM_KEYSTORE_PASSWORD
         ANDROID_KEY_ALIAS: $CM_KEY_ALIAS
         ANDROID_KEY_PASSWORD: $CM_KEY_PASSWORD
+        
     scripts:
       - name: Install Node dependencies
         script: |
@@ -22,13 +24,21 @@ workflows:
         script: |
           npx cap sync android
           
+      - name: Fix Gradle Wrapper
+        script: |
+          cd android
+          rm -rf .gradle gradle/wrapper
+          gradle wrapper --gradle-version 8.0
+          
       - name: Build Android APK
         script: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleRelease --no-daemon --stacktrace
+          
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
+      
     publishing:
       email:
         recipients:

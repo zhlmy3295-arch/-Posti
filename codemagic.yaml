@@ -33,18 +33,5 @@ workflows:
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
-          if ! grep -q "namespace" app/build.gradle; then
-            echo '    namespace "io.capacitor.posti"' >> app/build.gradle
-          fi
-          perl -i -pe 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
-          perl -i -pe 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
-          perl -i -pe 's/minSdkVersion.*/minSdkVersion 22/g' app/build.gradle
           
-      - name: Build Android APK Release
-        script: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
-          
-    artifacts:
-      - android/app/build/outputs/apk/release/*.apk
+          # نكتب

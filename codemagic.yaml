@@ -30,6 +30,12 @@ workflows:
           rm -rf .gradle gradle/wrapper
           gradle wrapper --gradle-version 8.0
           
+      - name: Fix Gradle Properties
+        script: |
+          cd android
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+          
       - name: Build Android APK
         script: |
           cd android
@@ -38,8 +44,4 @@ workflows:
           
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
-      
-    publishing:
-      email:
-        recipients:
-          - your_email@gmail.com
+      - android/app/build/outputs/logs/*.log

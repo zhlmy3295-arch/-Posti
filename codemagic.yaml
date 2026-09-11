@@ -32,6 +32,21 @@ workflows:
           cd android
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
-          echo "android.nonTransitiveRClass=true" >> gradle.properties
           
-          # نكتب
+          # نعدل الملف الموجود بسطرين بس
+          sed -i '' 's/compileSdkVersion [0-9]*/compileSdkVersion 35/' app/build.gradle
+          sed -i '' 's/targetSdkVersion [0-9]*/targetSdkVersion 35/' app/build.gradle
+          
+          # نضيف namespace لو مش موجود
+          grep -q namespace app/build.gradle || sed -i '' '2a\    namespace "io.capacitor.posti"' app/build.gradle
+          
+      - name: Build Android APK Release
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
+          echo "--- APK LOCATION ---"
+          find app/build/outputs -name "*.apk"
+          
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk   

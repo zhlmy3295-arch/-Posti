@@ -2,9 +2,9 @@ workflows:
   posti-android:
     name: Posti Android
     instance_type: mac_mini_m1
-    max_build_duration: 60
     
     environment:
+      node: 20
       vars:
         ANDROID_KEYSTORE_PATH: $CM_KEYSTORE_PATH
         ANDROID_KEYSTORE_PASSWORD: $CM_KEYSTORE_PASSWORD
@@ -12,36 +12,17 @@ workflows:
         ANDROID_KEY_PASSWORD: $CM_KEY_PASSWORD
         
     scripts:
-      - name: Install Node dependencies
-        script: npm install --legacy-peer-deps
-          
-      - name: Build Web App
+      - name: Install dependencies
+        script: npm ci
+      
+      - name: Build web
         script: npm run build
-          
+      
       - name: Sync Capacitor
         script: npx cap sync android
-          
-      - name: Fix Gradle Wrapper
-        script: |
-          cd android
-          rm -rf .gradle gradle/wrapper ~/.gradle/caches
-          gradle wrapper --gradle-version 8.4
-          
-      - name: Fix Android Configs to SDK 35
-        script: |
-          cd android
-          echo "android.useAndroidX=true" >> gradle.properties
-          echo "android.enableJetifier=true" >> gradle.properties
-          perl -i -pe 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
-          perl -i -pe 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
-          grep -q namespace app/build.gradle || sed -i '' '2a\    namespace "io.capacitor.posti"' app/build.gradle
-          echo "configurations.all { exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on' }" >> app/build.gradle
-          
-      - name: Build Android APK Release
-        script: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
-          
+      
+      - name: Build APK
+        script: cd android && ./gradlew assembleRelease
+
     artifacts:
       - android/app/build/outputs/apk/release/*.apk

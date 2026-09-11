@@ -1,7 +1,8 @@
 workflows:
-  android-release:
-    name: Android Release
+  posti-android:
+    name: Posti Android
     instance_type: mac_mini_m1
+    max_build_duration: 60
     environment:
       vars:
         ANDROID_KEYSTORE_PATH: $CM_KEYSTORE_PATH
@@ -9,12 +10,25 @@ workflows:
         ANDROID_KEY_ALIAS: $CM_KEY_ALIAS
         ANDROID_KEY_PASSWORD: $CM_KEY_PASSWORD
     scripts:
-      - name: Install dependencies
+      - name: Install Node dependencies
         script: |
           npm install --legacy-peer-deps
+          
+      - name: Build Web App
+        script: |
           npm run build
+          
+      - name: Sync Capacitor
+        script: |
           npx cap sync android
-      - name: Build APK
-        script: cd android && ./gradlew assembleRelease
+          
+      - name: Build Android APK
+        script: |
+          cd android
+          ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
+    publishing:
+      email:
+        recipients:
+          - your_email@gmail.com

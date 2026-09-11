@@ -5,10 +5,11 @@ workflows:
     max_build_duration: 60
     
     environment:
-      groups:
-        - android_secrets
       vars:
         ANDROID_KEYSTORE_PATH: $CM_KEYSTORE_PATH
+        ANDROID_KEYSTORE_PASSWORD: $CM_KEYSTORE_PASSWORD
+        ANDROID_KEY_ALIAS: $CM_KEY_ALIAS
+        ANDROID_KEY_PASSWORD: $CM_KEY_PASSWORD
         
     scripts:
       - name: Install Node dependencies

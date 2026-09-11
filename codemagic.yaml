@@ -1,16 +1,20 @@
 workflows:
-  posti-android:
-    name: Posti Android Build
+  android-release:
+    name: Android Release
     instance_type: mac_mini_m1
+    environment:
+      vars:
+        ANDROID_KEYSTORE_PATH: $CM_KEYSTORE_PATH
+        ANDROID_KEYSTORE_PASSWORD: $CM_KEYSTORE_PASSWORD
+        ANDROID_KEY_ALIAS: $CM_KEY_ALIAS
+        ANDROID_KEY_PASSWORD: $CM_KEY_PASSWORD
     scripts:
-      - name: Install
+      - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
+          npm run build
           npx cap sync android
       - name: Build APK
-        script: |
-          cd android
-          chmod +x ./gradlew
-          ./gradlew assembleRelease
+        script: cd android && ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk

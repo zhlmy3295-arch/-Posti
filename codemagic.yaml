@@ -36,15 +36,7 @@ workflows:
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
-          # نجبر الاصدار عشان Gradle 8
           sed -i '' 's/compileSdkVersion.*/compileSdkVersion 34/g' app/build.gradle
           sed -i '' 's/targetSdkVersion.*/targetSdkVersion 34/g' app/build.gradle
           
-      - name: Build Android APK
-        script: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
-          
-    artifacts:
-      - android/app/build/outputs/apk/release/*.apk
+      - name

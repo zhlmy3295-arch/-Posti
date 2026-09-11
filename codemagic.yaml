@@ -5,9 +5,7 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       vars:
-        CM_KEYSTORE_PASSWORD: 123456
-        CM_KEY_ALIAS: upload
-        CM_KEY_PASSWORD: 123456
+        ANDROID_KEYSTORE_NAME: posti_key
     scripts:
       - name: Clean Install
         script: |
@@ -26,10 +24,10 @@ workflows:
       - name: Build and Sign APK
         script: |
           cd android
-          ./gradlew assembleRelease \
-          -Pandroid.injected.signing.store.file=$CM_KEYSTORE_PATH \
-          -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD \
-          -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS \
-          -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
+          ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
+    publishing:
+      email:
+        recipients:
+          - zhlmy3295@gmail.com

@@ -27,34 +27,4 @@ workflows:
           rm -rf .gradle gradle/wrapper ~/.gradle/caches
           gradle wrapper --gradle-version 8.4
           
-      - name: Fix Android Configs to SDK 35
-        script: |
-          cd android
-          echo "android.useAndroidX=true" >> gradle.properties
-          echo "android.enableJetifier=true" >> gradle.properties
-          echo "android.nonTransitiveRClass=true" >> gradle.properties
-          
-          # نرفع Gradle و AGP
-          perl -i -pe 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
-          perl -i -pe 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
-          grep -q namespace app/build.gradle || sed -i '' '2a\    namespace "io.capacitor.posti"' app/build.gradle
-          
-          # نمنع المكتبة البايظة من النزول اصلا
-          cat >> app/build.gradle << 'EOF'
-
-configurations.all {
-    exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
-    resolutionStrategy {
-        force 'org.bouncycastle:bcprov-jdk15on:1.70'
-    }
-}
-EOF
-          
-      - name: Build Android APK Release
-        script: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
-          
-    artifacts:
-      - android/app/build/outputs/apk/release/*.apk
+      - name:

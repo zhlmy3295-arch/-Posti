@@ -30,11 +30,15 @@ workflows:
           rm -rf .gradle gradle/wrapper
           gradle wrapper --gradle-version 8.0
           
-      - name: Fix Gradle Properties
+      - name: Fix Android Configs
         script: |
           cd android
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
+          echo "android.nonTransitiveRClass=true" >> gradle.properties
+          # نجبر الاصدار عشان Gradle 8
+          sed -i '' 's/compileSdkVersion.*/compileSdkVersion 34/g' app/build.gradle
+          sed -i '' 's/targetSdkVersion.*/targetSdkVersion 34/g' app/build.gradle
           
       - name: Build Android APK
         script: |
@@ -44,4 +48,3 @@ workflows:
           
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
-      - android/app/build/outputs/logs/*.log

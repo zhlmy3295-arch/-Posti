@@ -4,8 +4,8 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      vars:
-        ANDROID_KEYSTORE_NAME: posti_key
+      groups:
+        - posti_keystore_credentials
     scripts:
       - name: Clean Install
         script: |
@@ -21,13 +21,16 @@ workflows:
           cd android
           ./gradlew --version || gradle wrapper
           chmod +x ./gradlew
+      - name: Decode Keystore
+        script: |
+          echo $CM_KEYSTORE | base64 --decode > $HOME/posti_key.p12
       - name: Build and Sign APK
         script: |
           cd android
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease \
+          -Pandroid.injected.signing.store.file=$HOME/posti_key.p12 \
+          -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD \
+          -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS \
+          -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
     artifacts:
-      - android/app/build/outputs/apk/release/*.apk
-    publishing:
-      email:
-        recipients:
-          - zhlmy3295@gmail.com
+      - android/app/build/outputs/apk/release/app-release.apk

@@ -34,10 +34,20 @@ workflows:
           echo "android.enableJetifier=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
           
+          # نضيف namespace لو مش موجود
           if ! grep -q "namespace" app/build.gradle; then
-            sed -i '' 's/android {/android {\n    namespace "io.capacitor.posti"/' app/build.gradle
+            echo '    namespace "io.capacitor.posti"' >> app/build.gradle
           fi
           
-          sed -i '' 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
-          sed -i '' 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
-          sed -i '' 's/min
+          # نعدل الـ SDK بأوامر مباشرة بدل sed
+          perl -i -pe 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
+          perl -i -pe 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
+          perl -i -pe 's/minSdkVersion.*/minSdkVersion 22/g' app/build.gradle
+          
+      - name: Build Android APK Release
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
+          
+    artifacts

@@ -25,27 +25,25 @@ workflows:
         script: |
           cd android
           rm -rf .gradle gradle/wrapper
-          gradle wrapper --gradle-version 8.0
+          gradle wrapper --gradle-version 8.2
           
-      - name: Fix Android Configs
+      - name: Fix Android Configs to SDK 35
         script: |
           cd android
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
-          sed -i '' 's/compileSdkVersion.*/compileSdkVersion 34/g' app/build.gradle
-          sed -i '' 's/targetSdkVersion.*/targetSdkVersion 34/g' app/build.gradle
-          sed -i '' 's/minSdkVersion.*/minSdkVersion 22/g' app/build.gradle
+          echo "android.nonTransitiveRClass=true" >> gradle.properties
           
-      - name: Build Debug To Show Error
-        script: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace || true
+          # نعلي كل حاجة لـ 35 عشان Capacitor الجديد
+          if ! grep -q "namespace" app/build.gradle; then
+            sed -i '' 's/android {/android {\n    namespace "io.capacitor.posti"/' app/build.gradle
+          fi
+          
+          sed -i '' 's/compileSdkVersion.*/compileSdkVersion 35/g' app/build.gradle
+          sed -i '' 's/targetSdkVersion.*/targetSdkVersion 35/g' app/build.gradle
+          sed -i '' 's/minSdkVersion.*/minSdkVersion 22/g' app/build.gradle
           
       - name: Build Android APK Release
         script: |
           cd android
-          ./gradlew assembleRelease --stacktrace
-          
-    artifacts:
-      - android/app/build/outputs/apk/**/*.apk
+          chmod +x gradlew

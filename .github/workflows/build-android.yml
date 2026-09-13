@@ -13,7 +13,7 @@ jobs:
         java-version: '17'
     - uses: gradle/gradle-build-action@v3
       with:
-        gradle-version: 8.11.1
+        gradle-version: 8.2.1
     - name: Build APK
       run: cd android && gradle assembleDebug --no-daemon  # مهم: gradle مش ./gradlew
     - uses: actions/upload-artifact@v4

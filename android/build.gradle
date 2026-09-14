@@ -1,30 +1,11 @@
 buildscript {
-    ext {
-        kotlin_version = '1.8.0'
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        minSdkVersion = 22
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
+    repositories { google() mavenCentral() }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.1.1'  // كان 7.4.2
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10" // كان 1.8.0
     }
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    repositories { google() mavenCentral() }
 }

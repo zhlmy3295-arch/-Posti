@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // ده المهم
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -21,6 +21,13 @@ allprojects {
         mavenCentral()
         flatDir {
             dirs 'libs'
+        }
+    }
+    
+    // الحل: اجبر كل المشاريع تستخدم 1.77
+    configurations.all {
+        resolutionStrategy {
+            force 'org.bouncycastle:bcprov-jdk18on:1.77'
         }
     }
 }

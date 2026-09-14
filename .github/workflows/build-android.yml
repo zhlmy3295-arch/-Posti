@@ -24,11 +24,11 @@ jobs:
         with:
           gradle-version: 8.2.1
 
-      - name: Clean Gradle Cache
-        run: rm -rf ~/.gradle/caches
+      - name: Nuke Bad BouncyCastle Cache
+        run: rm -rf ~/.gradle/caches/jars-9/18366b31678c0171857be093a3b8ec22/
 
       - name: Build Debug APK
-        run: cd android && gradle assembleDebug --no-daemon
+        run: cd android && gradle assembleDebug --no-daemon --refresh-dependencies
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4

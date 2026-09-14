@@ -23,17 +23,12 @@ allprojects {
             dirs 'libs'
         }
     }
-    
-    // ده الحل الجبار
+}
+
+// الحل: امنع 1.79 من المشروع كله
+subprojects {
     configurations.all {
-        resolutionStrategy {
-            eachDependency { details ->
-                if (details.requested.group == 'org.bouncycastle') {
-                    details.useVersion '1.77'
-                    details.because 'Capacitor 4 is incompatible with bouncycastle 1.79'
-                }
-            }
-        }
+        exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
     }
 }
 

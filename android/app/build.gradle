@@ -26,29 +26,3 @@ android {
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':capacitor-android')
-    implementation project(':capacitor-cordova-android-plugins')
-    
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0"
-    
-    // الحل: نجبر استخدام النسخة السليمة 1.77 بدل 1.79 البايظة
-    implementation('org.bouncycastle:bcprov-jdk18on:1.77') {
-        force = true
-    }
-}

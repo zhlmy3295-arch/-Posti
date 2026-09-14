@@ -1,49 +1,23 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace "io.ionic.starter"
     compileSdk 34
-
     defaultConfig {
         applicationId "io.ionic.starter"
-        minSdk 22
+        minSdk 24  // بقى 24 بدل 22
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-        }
-    }
-
+    buildTypes { release { minifyEnabled false } }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        sourceCompatibility JavaVersion.VERSION_17 // بقى 17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(":capacitor-android")
-    implementation project(":capacitor-cordova-android-plugins")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0"
-    implementation "org.bouncycastle:bcprov-jdk18on:1.77"
+    // خلاص مفيش capacitor-cordova-android-plugins لوحده
 }

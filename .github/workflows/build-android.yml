@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -26,10 +27,9 @@ jobs:
         with:
           gradle-version: '8.2.1'
 
-      - name: Give gradlew permission
-        run: chmod +x android/gradlew  # <-- ده الجديد
-
-      - run: cd android && ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Build Debug APK
+        run: cd android && gradle assembleDebug --no-daemon --stacktrace
+        # لاحظ: gradle مش ./gradlew
 
       - uses: actions/upload-artifact@v4
         with:

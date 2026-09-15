@@ -16,19 +16,22 @@ jobs:
         with:
           node-version: '18'
 
-      - run: npm install  # <-- اهم تغيير. بدل npm ci
+      - run: npm install
 
       - uses: actions/setup-java@v4
         with:
-          java-version: '21'  # <-- عشان bcprov
+          java-version: '21'
           distribution: 'temurin'
 
       - uses: gradle/gradle-build-action@v3
         with:
-          gradle-version: '8.2.1'
+          gradle-version: '8.7'  # <-- غيرناها من 8.2.1 ل 8.7
+
+      - name: Clean Gradle Cache
+        run: rm -rf ~/.gradle/caches/
 
       - name: Build Debug APK
-        run: cd android && gradle assembleDebug --no-daemon
+        run: cd android && gradle assembleDebug --no-daemon --no-configuration-cache
 
       - uses: actions/upload-artifact@v4
         with:

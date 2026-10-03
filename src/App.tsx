@@ -650,7 +650,7 @@ function ChatSelection({
           </div>
           <div>
             <h1 className="text-lg font-bold text-white tracking-wide leading-tight">
-              Pulse Posts
+              Posti
             </h1>
             <p className="text-[10px] sm:text-xs text-slate-500 font-medium italic">
               Connected to Firebase RTDB

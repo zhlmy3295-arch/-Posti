@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.pulsechat.app',
+  appId: 'com.posti.app',
   appName: 'Pulse Chat',
   webDir: 'dist'
 };

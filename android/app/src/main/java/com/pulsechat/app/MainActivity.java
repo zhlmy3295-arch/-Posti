@@ -1,4 +1,4 @@
-package com.pulsechat.app;
+package com.posti.app;
 
 import com.getcapacitor.BridgeActivity;
 

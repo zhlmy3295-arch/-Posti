@@ -3,5 +3,5 @@
     <string name="app_name">posti</string>
     <string name="title_activity_main">Posti</string>
     <string name="package_name">com.posti.app</string>
-    <string name="custom_url_scheme">com.pulsechat.app</string>
+    <string name="custom_url_scheme">com.posti.app</string>
 </resources>

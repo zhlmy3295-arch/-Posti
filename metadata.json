@@ -1,5 +1,5 @@
 {
-  "name": "posti",
+  "name": "Posti",
   "description": "Real-time user-to-user group chat using Firebase Realtime Database.",
   "requestFramePermissions": [],
   "majorCapabilities": []

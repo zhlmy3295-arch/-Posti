@@ -9,24 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - run: npm install
+
       - run: npm run build
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
       - run: npx cap sync android
+
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
-      - uses: android-actions/setup-android@v3
+
       - name: Build Android APK
         uses: gradle/gradle-build-action@v3
         with:
           arguments: assembleDebug
           build-root-directory: android
+
       - uses: actions/upload-artifact@v4
         with:
           name: Posti-APK

@@ -1,31 +1,48 @@
 name: Build Android APK
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - run: npm install
-      - run: npm run build
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      - run: npx cap sync android
-      - uses: actions/setup-java@v4
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Web App
+        run: npm run build
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
+          distribution: 'zulu'
           java-version: '21'
-          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
       - name: Build Android APK
-        uses: gradle/gradle-build-action@v3
+        run: cd android && ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          arguments: assembleDebug
-          build-root-directory: android
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Posti-APK
+          name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk

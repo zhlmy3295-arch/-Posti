@@ -53,16 +53,12 @@ jobs:
         working-directory: android
         run: |
           if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-            echo "gradle-wrapper.jar not found. Generating wrapper..."
-            gradle wrapper || true
+            echo "gradle-wrapper.jar not found in repository. Downloading official Gradle wrapper jar..."
+            mkdir -p gradle/wrapper
+            curl -sSL "https://raw.githubusercontent.com/gradle/gradle/v8.14.3/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar
           fi
-          if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-            chmod +x gradlew
-            ./gradlew assembleDebug --no-daemon --stacktrace
-          else
-            echo "Using system Gradle to build APK..."
-            gradle assembleDebug --no-daemon --stacktrace
-          fi
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       # Step 9: Verify APK & Generate Detailed Build Summary
       - name: Inspect APK and Generate Summary

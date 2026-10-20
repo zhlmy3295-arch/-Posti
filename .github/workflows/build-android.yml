@@ -1,46 +1,63 @@
 name: Build Android APK
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Build Android APK (Capacitor)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Step 1: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup Node.js runtime (v22 required for Capacitor 8)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
+      # Step 3: Install web dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Build Web App
+      # Step 4: Build web assets
+      - name: Build Web App (Vite)
         run: npm run build
 
-      - name: Sync Capacitor
+      # Step 5: Sync assets with Capacitor Android
+      - name: Sync Capacitor Android
         run: npx cap sync android
 
-      - name: Setup Java
+      # Step 6: Setup Java 21 JDK for Gradle build
+      - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
           cache: 'gradle'
 
-      - name: Make gradlew executable
+      # Step 7: Ensure Gradle wrapper script is executable
+      - name: Make Gradle wrapper executable
         run: chmod +x android/gradlew
 
-      - name: Build Android APK
-        run: cd android && ./gradlew assembleDebug --no-daemon --stacktrace
+      # Step 8: Build Android Debug APK
+      - name: Build Android Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload APK
+      # Step 9: Upload generated APK artifact
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7

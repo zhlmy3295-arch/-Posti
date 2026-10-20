@@ -51,9 +51,45 @@ jobs:
       # Step 8: Build Android Debug APK
       - name: Build Android Debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: |
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "gradle-wrapper.jar not found. Generating wrapper..."
+            gradle wrapper || true
+          fi
+          if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            chmod +x gradlew
+            ./gradlew assembleDebug --no-daemon --stacktrace
+          else
+            echo "Using system Gradle to build APK..."
+            gradle assembleDebug --no-daemon --stacktrace
+          fi
 
-      # Step 9: Upload generated APK artifact
+      # Step 9: Verify APK & Generate Detailed Build Summary
+      - name: Inspect APK and Generate Summary
+        run: |
+          APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+          if [ -f "$APK_PATH" ]; then
+            APK_SIZE=$(ls -lh "$APK_PATH" | awk '{print $5}')
+            APK_BYTES=$(wc -c < "$APK_PATH")
+            APK_SHA256=$(sha256sum "$APK_PATH" | awk '{print $1}')
+            
+            echo "### 📱 Android Build Summary" >> $GITHUB_STEP_SUMMARY
+            echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+            echo "| **App Name** | Posti |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Package ID** | \`com.pulsechat.app\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Build Type** | Debug APK |" >> $GITHUB_STEP_SUMMARY
+            echo "| **File Size** | $APK_SIZE ($APK_BYTES bytes) |" >> $GITHUB_STEP_SUMMARY
+            echo "| **SHA256 Hash** | \`$APK_SHA256\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Status** | ✅ Succeeded |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📥 **Download**: Scroll down to the **Artifacts** section below to download **app-debug**." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "::error::APK file was not found at expected path: $APK_PATH"
+            exit 1
+          fi
+
+      # Step 10: Upload generated APK artifact
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:

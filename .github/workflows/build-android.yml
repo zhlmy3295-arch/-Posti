@@ -69,7 +69,7 @@ jobs:
             APK_BYTES=$(wc -c < "$APK_PATH")
             APK_SHA256=$(sha256sum "$APK_PATH" | awk '{print $1}')
             
-            echo "### 📱 Android Build Summary" >> $GITHUB_STEP_SUMMARY
+            echo "### Android Build Summary" >> $GITHUB_STEP_SUMMARY
             echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
             echo "|---|---|" >> $GITHUB_STEP_SUMMARY
             echo "| **App Name** | Posti |" >> $GITHUB_STEP_SUMMARY
@@ -77,9 +77,9 @@ jobs:
             echo "| **Build Type** | Debug APK |" >> $GITHUB_STEP_SUMMARY
             echo "| **File Size** | $APK_SIZE ($APK_BYTES bytes) |" >> $GITHUB_STEP_SUMMARY
             echo "| **SHA256 Hash** | \`$APK_SHA256\` |" >> $GITHUB_STEP_SUMMARY
-            echo "| **Status** | ✅ Succeeded |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Status** | Success |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "📥 **Download**: Scroll down to the **Artifacts** section below to download **app-debug**." >> $GITHUB_STEP_SUMMARY
+            echo "Download: Scroll down to the Artifacts section below to download app-debug." >> $GITHUB_STEP_SUMMARY
           else
             echo "::error::APK file was not found at expected path: $APK_PATH"
             exit 1
@@ -91,5 +91,3 @@ jobs:
         with:
           name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 7
